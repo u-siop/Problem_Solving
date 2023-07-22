@@ -1,73 +1,63 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <algorithm>
+#include <queue>
+#include <tuple>
 using namespace std;
-#define X first
-#define Y second
 
-// int bfs(){
-//     int dx[4] = {1, 0, -1, 0};
-//     int dy[4] = {0, 1, 0, -1};
-//     visited[0][0] = 1;
-//     Q.push({0,0});
+// int board[102][102][102];               // 초기화 하지 않은 int 배열은 0으로 채워짐
+int dist[102][102][102];
 
-//     while(!Q.empty()){
-//         pair<int, int> cur = Q.front(); Q.pop();
-//         for(int i=0; i<4; i++){
-//             int nx = cur.X + dx[i];
-//             int ny = cur.Y + dy[i];
-
-//             if(nx < 0 || ny < 0 || nx >= m || ny >= n ) continue;
-//             if(visited[nx][ny] == 1 || board[nx][ny] != 0) continue;
-//             visited[nx][ny] = 1;
-//             Q.push({nx,ny});
-//         }
-//     }
-// }
+int dx[6] = { 1, 0, 0, -1, 0, 0 };
+int dy[6] = { 0, 1, 0, 0, -1, 0 };
+int dz[6] = { 0, 0, 1, 0, 0, -1 };
+queue<tuple<int, int, int>> Q;          // get<0>(Q.top()), get<1>(Q.top()), get<2>(Q.top())
 
 int main() {
-    int m, n;
-    int temp;
-    int day = -1;
-    cin >> m >> n;                      // m : row , n : col
-    queue<pair<int, int>> Q;
-    vector<vector<int>> board(n, vector<int>(m, 0));
-    int dx[4] = { 1, 0, -1, 0 };
-    int dy[4] = { 0, 1, 0, -1 };
-
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            cin >> temp;
-            if (temp >= 1) {
-                Q.push({ i,j });
+    int m, n, h;
+    cin >> m >> n >> h;    // m : row, n : col, h : height
+    vector<vector<vector<int>>> board(h, vector<vector<int>>(n, vector<int>(m, 0)));
+    for (int i = 0; i < h; i++) {
+        for (int j = 0; j < n; j++) {
+            for (int k = 0; k < m; k++) {
+                cin >> board[i][j][k];
+                if (board[i][j][k] == 1) {
+                    dist[i][j][k] = 1;
+                    Q.push({ i,j,k });
+                }
             }
-            board[i][j] = temp;
         }
     }
-
 
     while (!Q.empty()) {
-        int size = Q.size();
-        for (int i = 0; i < size; i++) {
-            pair<int, int> cur = Q.front(); Q.pop();
-            for (int i = 0; i < 4; i++) {
-                int nx = cur.X + dx[i];
-                int ny = cur.Y + dy[i];
-                if (nx < 0 || ny < 0 || nx >= n || ny >= m) continue;
-                if (board[nx][ny] != 0) continue;
-                board[nx][ny] = 1;
-                Q.push({ nx,ny });
+        tuple<int, int, int> cur = Q.front(); Q.pop();
+        for (int i = 0; i < 6; i++) {
+            int nx = get<2>(cur) + dx[i];
+            int ny = get<1>(cur) + dy[i];
+            int nz = get<0>(cur) + dz[i];
+
+            if (nx < 0 || ny < 0 || nz < 0 || nx >= m || ny >= n || nz >= h) continue;
+            if (board[nz][ny][nx] != 0 || dist[nz][ny][nx] > 0) continue;
+            board[nz][ny][nx] = 1;
+            dist[nz][ny][nx] = dist[get<0>(cur)][get<1>(cur)][get<2>(cur)] + 1;
+            Q.push({ nz,ny,nx });
+        }
+    }
+
+    int ans = 0;
+    for (int i = 0; i < h; i++) {
+        for (int j = 0; j < n; j++) {
+            if (find(board[i][j].begin(), board[i][j].end(), 0) != board[i][j].end()) {
+                cout << -1 << endl;
+                return 0;
+            }
+            else {
+                for (int k = 0; k < m; k++) {
+                    ans = max(ans, dist[i][j][k]);
+                }
             }
         }
-        day++;
     }
 
-    for (int i = 0; i < n; i++) {
-        if (find(board[i].begin(), board[i].end(), 0) != board[i].end()) {         // vector 내에 0이 존재함?
-            day = -1;
-            break;
-        }
-    }
-
-    cout << day << endl;
-
+    cout << ans -1  << endl;
     return 0;
 }
