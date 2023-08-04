@@ -10,7 +10,7 @@ int main(){
     D[2] = 2;
     D[3] = 4;
     for(int i=4; i<=11; i++){
-        D[i] = D[i-1] + D[i-2] + D[i-3] ;      // n[4] == 12? but actually n[4] == 7  n[5] ?
+        D[i] = D[i-1] + D[i-2] + D[i-3] ;
     }
 
     cin >> t;
