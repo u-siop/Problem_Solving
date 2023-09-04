@@ -51,7 +51,7 @@ int main(){
 
     vector<string> ans(s.begin(), s.end());
     sort(ans.begin(), ans.end(), greater<string>());
-    for(auto x :ans) cout << x << '\n';
+    for(auto x : ans) cout << x << '\n';
 
     return 0;
 }
