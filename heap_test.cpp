@@ -28,6 +28,7 @@ void pop(){
         int lc = 2*index, rc = 2*index+1;
         int min_child = lc;
         if(rc <= size && heap[rc] < heap[lc]) min_child = rc;
+        
         if(heap[index] <= heap[min_child]) break;
         swap(heap[index], heap[min_child]);
         index = min_child;
