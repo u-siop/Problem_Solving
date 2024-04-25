@@ -6,6 +6,7 @@
         "vector": "cpp",
         "xstring": "cpp",
         "span": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "iostream": "cpp"
     }
 }
